@@ -1,28 +1,63 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-container>
+      <v-row>
+        <v-col><strong>Заявки:</strong>
+          <v-list min-width="200">
+            <v-list-item-group v-model="model">
+              <v-list-item
+                v-for="(item, i) in requests"
+                :key="i"
+                v-on:click="selectRequest(item.uuid)"
+              >
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.uuid"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+        <v-col>
+        <template v-if="selectedRequest !== ''">
+          <RequestLifeCycle />
+        </template>
+        <template v-else>
+          <v-card class="mx-auto" max-width="500" elevation="0">
+            <p>Не выбрано ни одной заявки</p>
+          </v-card>
+        </template>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RequestLifeCycle from "./components/RequestLifeCycle"
+import db from "./components/sampleData"
+import EventBus from './event-bus'
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    RequestLifeCycle,
+  },
+  created() {
+    this.getRequestsList();
+  },
+  data: () => ({
+    model: "1",
+    selectedRequest: "",
+  }),
+  methods: {
+    getRequestsList() {
+      this.requests = db.requests;
+    },
+    selectRequest(uuid) {
+      this.selectedRequest = uuid
+      EventBus.$emit('LOAD_REQUEST', uuid)
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
