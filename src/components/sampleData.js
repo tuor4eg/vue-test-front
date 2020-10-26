@@ -1,4 +1,5 @@
-const db = {
+// Test database
+export const db = {
   requests: [
     {
       uuid: '1105',
@@ -12,6 +13,13 @@ const db = {
       date: '2020-10-20T12:30:00',
       userId: '2',
       status: 'in_progress',
+      type: 'salary'
+    },
+    {
+      uuid: '3358',
+      date: '2020-10-22T10:45:00',
+      userId: '6',
+      status: 'deny',
       type: 'salary'
     },
   ],
@@ -35,7 +43,11 @@ const db = {
     {
       uuid: '5',
       name: 'Александр Михайлович'
-    }
+    },
+    {
+      uuid: '6',
+      name: 'Иван Сусанин'
+    },
   ],
   stages: [
     {
@@ -61,6 +73,24 @@ const db = {
       requestId: '2254',
       order: 'every',
       userId: ['3', '4', '5'],
+    },
+    {
+      uuid: '5',
+      requestId: '3358',
+      order: 'default',
+      userId: ['6'],
+    },
+    {
+      uuid: '6',
+      requestId: '3358',
+      order: 'every',
+      userId: ['3', '5'],
+    },
+    {
+      uuid: '7',
+      requestId: '3358',
+      order: 'any',
+      userId: ['4'],
     },
   ],
   points: [
@@ -99,17 +129,45 @@ const db = {
     {
       uuid: '5',
       date: '2020-10-13T15:50:00',
-      requestId: '2254',
-      stageId: '4',
+      requestId: '3358',
+      stageId: '5',
+      userId: '6',
+      result: 'create'
+    },
+    {
+      uuid: '6',
+      date: '2020-10-22T10:55:00',
+      requestId: '3358',
+      stageId: '6',
       userId: '5',
       result: 'accept'
+    },
+    {
+      uuid: '7',
+      date: '2020-10-22T10:58:00',
+      requestId: '3358',
+      stageId: '6',
+      userId: '3',
+      result: 'accept'
+    },
+    {
+      uuid: '8',
+      date: '2020-10-22T12:51:00',
+      requestId: '3358',
+      stageId: '7',
+      userId: '4',
+      result: 'deny'
     }
   ]
 }
 
 export default db
 
-export const loadRequest = (uuid) => {
+/**
+ * Emulate SQL queries to database to form request data
+ * @param {string} uuid 
+ */
+const selectRequestData = (uuid) => {
   const points = db.points.filter(item => item.requestId === uuid)
 
   const groups = points.reduce((acc, item) => {
@@ -158,7 +216,24 @@ export const loadRequest = (uuid) => {
 
   const [request] = db.requests.filter(item => item.uuid === uuid)
 
+  const [user] = db.users.filter(item => request.userId === item.uuid)
+
   request['stages'] = stages
+  request['userData'] = user
 
   return request
+}
+
+/**
+ * Emulate server delay for async loading
+ * @param {string} uuid 
+ */
+export const loadRequest = async (uuid) => {
+  const result = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(selectRequestData(uuid))
+    }, 500)
+  })
+
+  return result
 }

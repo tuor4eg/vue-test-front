@@ -7,13 +7,13 @@
       Состояние: {{statusDispatcher[request.status]}}
     </v-toolbar-title>
     <p class="ml-1">
-      Автор: {{this.user.name}}
+      Автор: {{request.userData.name}}
     </p>
   </v-container>
 </template>
 
 <script>
-import db from './sampleData'
+
 export default {
   name: 'Request',
   props: {
@@ -31,18 +31,11 @@ export default {
     }
   }),
   computed: {
-    user() {
-      const [user] = db.users.filter(item => item.uuid === this.request.userId)
-      return user
-    },
     date() {
       const rawData = new Date(this.request.date)
       const date = `${rawData.getDay()}.${rawData.getMonth() + 1} ${rawData.getHours()}:${rawData.getMinutes()}`
       return date
     },
   },
-  methods: {
-
-  }
 }
 </script>

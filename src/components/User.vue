@@ -1,17 +1,21 @@
 <template>
   <v-container>
-      <strong>{{ approver.name }}</strong>
+    <strong>{{ user.name }}</strong>
   </v-container>
 </template>
 
 <script>
+
+/**
+ * Component for user data
+ */
 export default {
-  name: 'Approver',
+  name: "User",
   props: {
-    approver: {
+    user: {
       type: Object,
       required: true,
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -2,7 +2,8 @@
   <v-app>
     <v-container>
       <v-row>
-        <v-col><strong>Заявки:</strong>
+        <v-col
+          ><strong>Заявки:</strong>
           <v-list min-width="200">
             <v-list-item-group v-model="model">
               <v-list-item
@@ -18,14 +19,14 @@
           </v-list>
         </v-col>
         <v-col>
-        <template v-if="selectedRequest !== ''">
-          <RequestLifeCycle />
-        </template>
-        <template v-else>
-          <v-card class="mx-auto" max-width="500" elevation="0">
-            <p>Не выбрано ни одной заявки</p>
-          </v-card>
-        </template>
+          <template v-if="selectedRequest !== ''">
+            <RequestLifeCycle />
+          </template>
+          <template v-else>
+            <v-card class="mx-auto" max-width="500" elevation="0">
+              <p>Не выбрано ни одной заявки</p>
+            </v-card>
+          </template>
         </v-col>
       </v-row>
     </v-container>
@@ -33,10 +34,13 @@
 </template>
 
 <script>
-import RequestLifeCycle from "./components/RequestLifeCycle"
-import db from "./components/sampleData"
-import EventBus from './event-bus'
+import RequestLifeCycle from "./components/RequestLifeCycle";
+import db from "./components/sampleData";
+import EventBus from "./event-bus";
 
+/**
+ * Main component for requests list
+ */
 export default {
   name: "App",
   components: {
@@ -54,10 +58,9 @@ export default {
       this.requests = db.requests;
     },
     selectRequest(uuid) {
-      this.selectedRequest = uuid
-      EventBus.$emit('LOAD_REQUEST', uuid)
+      this.selectedRequest = uuid;
+      EventBus.$emit("LOAD_REQUEST", uuid);
     },
   },
 };
 </script>
-

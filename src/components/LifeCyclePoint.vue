@@ -2,18 +2,18 @@
   <v-container>
       <div class="font-weight-normal">
         <strong>Запись # {{point.uuid}}</strong>
-        <Approver :approver="point.userData"/> {{textDispatcher[point.result]}} заявку {{ this.date }}
+        <User :user="point.userData"/> {{textDispatcher[point.result]}} заявку {{ this.date }}
       </div>
   </v-container>
 </template>
 
 <script>
-import Approver from './Approver'
+import User from './User'
 
 export default {
   name: 'LifeCyclePoint',
   components: {
-    Approver
+    User
   },
   props: {
     point: {
